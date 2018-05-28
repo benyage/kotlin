@@ -46,10 +46,9 @@ class KotlinMppCommonSourceRootProvider : AdditionalRootsProviderService<JavaSou
         commonModule: JpsModule,
         target: ModuleBuildTarget
     ) {
-        val commonSourceRoots = commonModule.sourceRoots
-        for (commonSourceRoot in commonSourceRoots) {
-            val commonSourceRootType = commonSourceRoot.rootType
-            if (target.isTests == commonSourceRootType.isTestsRootType) {
+        for (commonSourceRoot in commonModule.sourceRoots) {
+            val isCommonTestsRootType = commonSourceRoot.rootType.isTestsRootType
+            if (isCommonTestsRootType == null || target.isTests == isCommonTestsRootType) {
                 val javaSourceRootProperties = commonSourceRoot.properties as? JavaSourceRootProperties
 
                 result.add(
