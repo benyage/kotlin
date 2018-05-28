@@ -179,12 +179,14 @@ abstract class KotlinModuleBuildTarget(val context: CompileContext, val jpsModul
 
     abstract fun createCacheStorage(paths: BuildDataPaths): JpsIncrementalCache
 
-    abstract fun updateChunkCaches(
+    open fun updateChunkCaches(
         chunk: ModuleChunk,
         dirtyFilesHolder: KotlinChunkDirtySourceFilesHolder,
         outputItems: Map<ModuleBuildTarget, Iterable<GeneratedFile>>,
         incrementalCaches: Map<ModuleBuildTarget, JpsIncrementalCache>
-    )
+    ) {
+        // do nothing
+    }
 
     open fun updateCaches(
         jpsIncrementalCache: JpsIncrementalCache,
@@ -226,11 +228,8 @@ abstract class KotlinModuleBuildTarget(val context: CompileContext, val jpsModul
         // Should not be cached since may be vary in different rounds
 
         val jpsModuleTarget = target.jpsModuleBuildTarget
-        val moduleSources =
-            if (IncrementalCompilation.isEnabled()) {
-                dirtyFilesHolder.getDirtyFiles(jpsModuleTarget)
-            } else target.sourceFiles
-        return moduleSources
+        return if (IncrementalCompilation.isEnabled()) dirtyFilesHolder.getDirtyFiles(jpsModuleTarget)
+        else target.sourceFiles
     }
 
     protected fun checkShouldCompileAndLog(dirtyFilesHolder: KotlinChunkDirtySourceFilesHolder, moduleSources: Collection<File>) =

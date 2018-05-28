@@ -42,9 +42,9 @@ import java.util.*
 val KOTLIN_CACHE_DIRECTORY_NAME = "kotlin"
 
 open class IncrementalJvmCache(
-    private val targetDataRoot: File,
-    targetOutputDir: File?
-) : IncrementalCacheCommon<JvmClassName>(File(targetDataRoot, KOTLIN_CACHE_DIRECTORY_NAME)), IncrementalCache {
+        private val targetDataRoot: File,
+        targetOutputDir: File?
+) : AbstractIncrementalCache<JvmClassName>(File(targetDataRoot, KOTLIN_CACHE_DIRECTORY_NAME)), IncrementalCache {
     companion object {
         private val PROTO_MAP = "proto"
         private val CONSTANTS_MAP = "constants"

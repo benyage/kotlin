@@ -21,14 +21,14 @@ import org.jetbrains.jps.builders.storage.StorageProvider
 import org.jetbrains.jps.incremental.ModuleBuildTarget
 import org.jetbrains.jps.incremental.storage.BuildDataManager
 import org.jetbrains.jps.incremental.storage.StorageOwner
-import org.jetbrains.kotlin.incremental.ClassNameAwareIncrementalCache
+import org.jetbrains.kotlin.incremental.IncrementalCacheCommon
 import org.jetbrains.kotlin.incremental.IncrementalJsCache
 import org.jetbrains.kotlin.incremental.IncrementalJvmCache
 import org.jetbrains.kotlin.jps.build.KotlinBuilder
 import org.jetbrains.kotlin.jps.platforms.KotlinModuleBuildTarget
 import java.io.File
 
-interface JpsIncrementalCache : ClassNameAwareIncrementalCache, StorageOwner {
+interface JpsIncrementalCache : IncrementalCacheCommon, StorageOwner {
     fun addJpsDependentCache(cache: JpsIncrementalCache)
 }
 

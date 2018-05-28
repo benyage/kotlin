@@ -18,7 +18,6 @@ package org.jetbrains.kotlin.incremental
 
 import com.intellij.util.io.EnumeratorStringDescriptor
 import org.jetbrains.kotlin.incremental.storage.*
-import org.jetbrains.kotlin.load.kotlin.incremental.components.IncrementalCache
 import org.jetbrains.kotlin.metadata.ProtoBuf
 import org.jetbrains.kotlin.metadata.deserialization.NameResolver
 import org.jetbrains.kotlin.metadata.deserialization.TypeTable
@@ -28,8 +27,11 @@ import org.jetbrains.kotlin.serialization.deserialization.getClassId
 import java.io.File
 import java.util.*
 
-interface ClassNameAwareIncrementalCache {
-    val thisWithDependentCaches: Iterable<IncrementalCacheCommon<*>>
+/**
+ * Incremental cache common for JVM and JS, ClassName type aware
+ */
+interface IncrementalCacheCommon {
+    val thisWithDependentCaches: Iterable<AbstractIncrementalCache<*>>
     fun classesFqNamesBySources(files: Iterable<File>): Collection<FqName>
     fun getSubtypesOf(className: FqName): Sequence<FqName>
     fun getSourceFileIfClass(fqName: FqName): File?
@@ -41,9 +43,9 @@ interface ClassNameAwareIncrementalCache {
 }
 
 /**
- * Incremental cache common for JVM and JS
+ * Incremental cache common for JVM and JS for specifit ClassName type
  */
-abstract class IncrementalCacheCommon<ClassName>(workingDir: File) : BasicMapsOwner(workingDir), ClassNameAwareIncrementalCache {
+abstract class AbstractIncrementalCache<ClassName>(workingDir: File) : BasicMapsOwner(workingDir), IncrementalCacheCommon {
     companion object {
         private val SUBTYPES = "subtypes"
         private val SUPERTYPES = "supertypes"
@@ -53,11 +55,11 @@ abstract class IncrementalCacheCommon<ClassName>(workingDir: File) : BasicMapsOw
         @JvmStatic protected val DIRTY_OUTPUT_CLASSES = "dirty-output-classes"
     }
 
-    private val dependents = arrayListOf<IncrementalCacheCommon<ClassName>>()
-    fun addDependentCache(cache: IncrementalCacheCommon<ClassName>) {
+    private val dependents = arrayListOf<AbstractIncrementalCache<ClassName>>()
+    fun addDependentCache(cache: AbstractIncrementalCache<ClassName>) {
         dependents.add(cache)
     }
-    override val thisWithDependentCaches: Iterable<IncrementalCacheCommon<ClassName>> by lazy {
+    override val thisWithDependentCaches: Iterable<AbstractIncrementalCache<ClassName>> by lazy {
         val result = arrayListOf(this)
         result.addAll(dependents)
         result

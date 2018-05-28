@@ -23,7 +23,6 @@ import org.jetbrains.kotlin.incremental.storage.BasicStringMap
 import org.jetbrains.kotlin.incremental.storage.DirtyClassesFqNameMap
 import org.jetbrains.kotlin.incremental.storage.SourceToFqNameMap
 import org.jetbrains.kotlin.incremental.storage.StringToLongMapExternalizer
-import org.jetbrains.kotlin.load.kotlin.incremental.components.JvmPackagePartProto
 import org.jetbrains.kotlin.metadata.ProtoBuf
 import org.jetbrains.kotlin.metadata.deserialization.NameResolverImpl
 import org.jetbrains.kotlin.metadata.deserialization.getExtensionOrNull
@@ -37,7 +36,7 @@ import java.io.DataInput
 import java.io.DataOutput
 import java.io.File
 
-open class IncrementalJsCache(cachesDir: File) : IncrementalCacheCommon<FqName>(cachesDir) {
+open class IncrementalJsCache(cachesDir: File) : AbstractIncrementalCache<FqName>(cachesDir) {
     companion object {
         private val TRANSLATION_RESULT_MAP = "translation-result"
         private val INLINE_FUNCTIONS = "inline-functions"
